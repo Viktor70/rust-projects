@@ -1,0 +1,20 @@
+[package]
+name = "minilsof"
+version = "0.1.0"
+edition = "2024"
+description = "find deleted files"
+
+[dependencies]
+argh = "0.1.13"
+chrono = "0.4.41"
+clap = { version = "4.5.38", features = ["derive"] }
+mpsc = "0.2.5"
+
+[[bin]]
+name = "flogger"
+path = "src/fake-logger.rs"
+
+[lib]
+name = "lib"
+path = "src/lib/mod.rs"
+
