@@ -25,11 +25,6 @@ impl Memory {
             let size_part = parts[1];
             let total = Self::parse_numbers(size_part)?;
             return Some(total);
-            /*if size_part.ends_with('k') {
-                if let Ok(size) = size_part[..size_part.len() - 1].parse::<u8>() {
-                    return Some(size);
-                }
-            }*/
         }
         None
     }
