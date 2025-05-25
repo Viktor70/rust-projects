@@ -1,6 +1,6 @@
 #[derive(Debug, PartialEq)]
 pub struct Memory {
-    page_size: Option<u8>,
+    page_size: Option<u32>,
     physical: Option<u32>,
     physical_free: Option<u32>,
     swap: Option<u32>,
@@ -8,6 +8,7 @@ pub struct Memory {
 }
 impl Memory {
     fn parse_numbers(input: &str) -> Option<u32> {
+        //  49021208k
         if input.ends_with('k') {
             if let Ok(output) = input[..input.len() - 1].parse::<u32>() {
                 return Some(output);
@@ -16,35 +17,34 @@ impl Memory {
         None
     }
 
-    fn parse_page_size(input: &str) -> Option<u8> {
+    fn parse_page_size(input: &str) -> Option<u32> {
+        //  Memory: 4k page
         let parts: Vec<&str> = input.split_whitespace().collect();
 
         if parts.len() >= 2 && parts[0] == "Memory:" {
             let size_part = parts[1];
-            if size_part.ends_with('k') {
+            let total = Self::parse_numbers(size_part)?;
+            return Some(total);
+            /*if size_part.ends_with('k') {
                 if let Ok(size) = size_part[..size_part.len() - 1].parse::<u8>() {
                     return Some(size);
                 }
-            }
+            }*/
         }
         None
     }
 
     fn parse_memory(input: &str) -> Option<(u32, u32)> {
+        //  physical 49021208k(38608508k free)
+        //  swap 2097148k(1136376k free)
         let parts: Vec<&str> = input.split_whitespace().collect();
         if parts.len() < 3 {
             return None;
         }
 
-        // Разделяем часть с памятью (например, "49021208k(38608508k free)" )
         let (total_part, rest) = parts[1].split_once('(')?;
-
-        // Парсим total (например, "49021208k" → 49021208)
-
         let total = Self::parse_numbers(total_part)?;
-
         let free = Self::parse_numbers(rest)?;
-
         Some((total, free))
     }
 
